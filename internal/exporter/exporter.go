@@ -19,13 +19,13 @@ var (
 	// metrics
 	installs = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "installs"),
-		"Amount of installations of the extension",
+		"Number of installations of the extension",
 		labels,
 		nil,
 	)
 	updates = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "updates"),
-		"Amount of updates of the extension",
+		"Number of updates of the extension",
 		labels,
 		nil,
 	)
@@ -43,13 +43,13 @@ var (
 	)
 	ratings = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "ratings"),
-		"Amount of ratings of the extension",
+		"Number of ratings of the extension",
 		labels,
 		nil,
 	)
 	downloads = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "downloads"),
-		"Amount of manual extension downloads via web interface",
+		"Number of manual extension downloads via web interface",
 		labels,
 		nil,
 	)
@@ -85,6 +85,14 @@ type VisualStudioMarketPlaceExporter struct {
 
 func (e *VisualStudioMarketPlaceExporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- installs
+	ch <- updates
+	ch <- averageRating
+	ch <- weightedRating
+	ch <- ratings
+	ch <- downloads
+	ch <- trendingDaily
+	ch <- trendingWeekly
+	ch <- trendingMonthly
 }
 
 func (e *VisualStudioMarketPlaceExporter) Collect(ch chan<- prometheus.Metric) {
