@@ -14,58 +14,61 @@ import (
 const namespace = "visualstudio_marketplace"
 
 var (
+	labels = []string{"extension", "extensionId", "source"}
+
+	// metrics
 	installs = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "installs"),
 		"Amount of installations of the extension",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	updates = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "updates"),
 		"Amount of updates of the extension",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	averageRating = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "average_rating"),
 		"Average rating of the extension",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	weightedRating = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "weighted_rating"),
 		"Weighted rating of the extension",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	ratings = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "ratings"),
 		"Amount of ratings of the extension",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	downloads = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "downloads"),
 		"Amount of manual extension downloads via web interface",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	trendingDaily = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "trending_daily"),
 		"Daily trending score of the extension",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	trendingWeekly = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "trending_weekly"),
 		"Weekly trending score of the extensions",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 	trendingMonthly = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "trending_monthly"),
 		"Monthly trending score of the extension ",
-		[]string{"extension", "extensionId"},
+		labels,
 		nil,
 	)
 
@@ -127,6 +130,7 @@ func (e *VisualStudioMarketPlaceExporter) Collect(ch chan<- prometheus.Metric) {
 				statistic.Value,
 				statistic.ExtensionName,
 				statistic.ExtensionId,
+				"marketplace.visualstudio.com",
 			)
 			scrapedMetrics += 1
 		}
