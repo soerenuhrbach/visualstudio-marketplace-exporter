@@ -44,25 +44,25 @@ var (
 	)
 	downloads = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "downloads"),
-		"Amount of downloads of the extension", // TODO: Investigate what is metric is about
+		"Amount of manual extension downloads via web interface",
 		[]string{"extension", "extensionId"},
 		nil,
 	)
 	trendingDaily = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "trending_daily"),
-		"Trending daily", // TODO: Investigate what is metric is about
+		"Daily trending score of the extension",
 		[]string{"extension", "extensionId"},
 		nil,
 	)
 	trendingWeekly = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "trending_weekly"),
-		"Trending weekly", // TODO: Investigate what is metric is about
+		"Weekly trending score of the extensions",
 		[]string{"extension", "extensionId"},
 		nil,
 	)
 	trendingMonthly = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "trending_monthly"),
-		"Trending monthly", // TODO: Investigate what is metric is about
+		"Monthly trending score of the extension ",
 		[]string{"extension", "extensionId"},
 		nil,
 	)
@@ -75,7 +75,7 @@ var (
 )
 
 type VisualStudioMarketPlaceExporter struct {
-	extensionName string
+	extensionNames []string
 }
 
 func (e *VisualStudioMarketPlaceExporter) Describe(ch chan<- *prometheus.Desc) {
@@ -88,7 +88,7 @@ func (e *VisualStudioMarketPlaceExporter) Collect(ch chan<- prometheus.Metric) {
 		HttpClient: client,
 	}
 
-	statistics := client.GetStatisticsForExtension(e.extensionName)
+	statistics := client.GetStatistics(e.extensionNames)
 
 	for i := range statistics {
 		statistic := statistics[i]
@@ -130,8 +130,8 @@ func (e *VisualStudioMarketPlaceExporter) Collect(ch chan<- prometheus.Metric) {
 	log.Println("Endpoint scraped")
 }
 
-func NewVisualStudioMarketPlaceExporter(extensionName string) *VisualStudioMarketPlaceExporter {
+func NewVisualStudioMarketPlaceExporter(extensions []string) *VisualStudioMarketPlaceExporter {
 	return &VisualStudioMarketPlaceExporter{
-		extensionName: extensionName,
+		extensionNames: extensions,
 	}
 }

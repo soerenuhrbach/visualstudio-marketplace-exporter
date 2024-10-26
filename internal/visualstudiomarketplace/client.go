@@ -14,19 +14,29 @@ type VisualStudioMarketplaceClient struct {
 	HttpClient *http.Client
 }
 
-func (e *VisualStudioMarketplaceClient) GetStatisticsForExtension(extensionName string) []VisualStudioMarketPlaceStatistic {
+func (e *VisualStudioMarketplaceClient) buildCriteriaForExtensions(extensions []string) string {
+	var buffer bytes.Buffer
+
+	for i := range extensions {
+		if i > 0 {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString(
+			fmt.Sprintf(`{ "filterType": 7, "value": "%s" }`, extensions[i]),
+		)
+	}
+
+	return buffer.String()
+}
+
+func (e *VisualStudioMarketplaceClient) GetStatistics(extensions []string) []VisualStudioMarketPlaceStatistic {
 	var jsonStr = fmt.Sprintf(`{
 		"assetTypes": null,
 		"filters": [
 				{
-						"criteria": [
-								{
-										"filterType": 7,
-										"value": "%s"
-								}
-						],
+						"criteria": [%s],
 						"direction": 2,
-						"pageSize": 100,
+						"pageSize": %d,
 						"pageNumber": 1,
 						"sortBy": 0,
 						"sortOrder": 0,
@@ -34,7 +44,7 @@ func (e *VisualStudioMarketplaceClient) GetStatisticsForExtension(extensionName 
 				}
 		],
 		"flags": 870
-	}`, extensionName)
+	}`, e.buildCriteriaForExtensions(extensions), len(extensions))
 
 	req, err := http.NewRequest("POST", e.BaseUrl+"/_apis/public/gallery/extensionquery", bytes.NewBuffer([]byte(jsonStr)))
 	if err != nil {
@@ -58,13 +68,6 @@ func (e *VisualStudioMarketplaceClient) GetStatisticsForExtension(extensionName 
 	err = json.Unmarshal(body, &parsedResponse)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	if len(parsedResponse.Results) == 0 {
-		log.Fatalf("Extension '%s' was not found!", extensionName)
-	}
-	if len(parsedResponse.Results[0].Extensions) == 0 {
-		log.Fatalf("Extension '%s' was not found!", extensionName)
 	}
 
 	statistics := make([]VisualStudioMarketPlaceStatistic, 0)

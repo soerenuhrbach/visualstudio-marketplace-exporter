@@ -1,24 +1,23 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/soerenuhrbach/visualstudio-marketplace-exporter/config"
 	"github.com/soerenuhrbach/visualstudio-marketplace-exporter/internal/exporter"
 )
 
-var (
-	// config
-	metricsPath   = "/metrics"
-	listenAddress = ":9719"
-)
-
 func main() {
-	http.Handle(metricsPath, promhttp.Handler())
+	cfg := config.Load()
 
-	exporter := exporter.NewVisualStudioMarketPlaceExporter("soerenuhrbach.vscode-deepl")
+	http.Handle(cfg.MetricsPath, promhttp.Handler())
+
+	exporter := exporter.NewVisualStudioMarketPlaceExporter(cfg.Extensions)
 	prometheus.MustRegister(exporter)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -26,10 +25,11 @@ func main() {
              <head><title>VisualStudio Marketplace Exporter</title></head>
              <body>
              <h1>VisualStudio Marketplace Exporter</h1>
-             <p><a href='` + metricsPath + `'>Metrics</a></p>
+             <p><a href='` + cfg.MetricsPath + `'>Metrics</a></p>
              </body>
              </html>`))
 	})
 
+	listenAddress := fmt.Sprintf("%s:%d", cfg.BindAddress, cfg.Port)
 	log.Fatal(http.ListenAndServe(listenAddress, nil))
 }
