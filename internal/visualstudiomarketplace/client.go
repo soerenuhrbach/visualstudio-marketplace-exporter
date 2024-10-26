@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type VisualStudioMarketplaceClient struct {

@@ -2,8 +2,10 @@ package exporter
 
 import (
 	"crypto/tls"
-	"log"
+	"fmt"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/soerenuhrbach/visualstudio-marketplace-exporter/internal/visualstudiomarketplace"
@@ -90,10 +92,10 @@ func (e *VisualStudioMarketPlaceExporter) Collect(ch chan<- prometheus.Metric) {
 
 	statistics := client.GetStatistics(e.extensionNames)
 
+	var scrapedMetrics = 0
+
 	for i := range statistics {
 		statistic := statistics[i]
-
-		log.Println(statistic.Name)
 
 		var metric *prometheus.Desc
 
@@ -118,16 +120,19 @@ func (e *VisualStudioMarketPlaceExporter) Collect(ch chan<- prometheus.Metric) {
 			metric = downloads
 		}
 
-		ch <- prometheus.MustNewConstMetric(
-			metric,
-			prometheus.GaugeValue,
-			statistic.Value,
-			statistic.ExtensionName,
-			statistic.ExtensionId,
-		)
+		if metric != nil {
+			ch <- prometheus.MustNewConstMetric(
+				metric,
+				prometheus.GaugeValue,
+				statistic.Value,
+				statistic.ExtensionName,
+				statistic.ExtensionId,
+			)
+			scrapedMetrics += 1
+		}
 	}
 
-	log.Println("Endpoint scraped")
+	log.Info(fmt.Sprintf("Scraped %d metrics!", scrapedMetrics))
 }
 
 func NewVisualStudioMarketPlaceExporter(extensions []string) *VisualStudioMarketPlaceExporter {

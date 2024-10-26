@@ -50,14 +50,14 @@ func Load() *ExporterConfig {
 
 func (c ExporterConfig) show() {
 	val := reflect.ValueOf(&c).Elem()
-	log.Info("-----------------------------------")
-	log.Info("-  		Exporter configuration  		-")
-	log.Info("-----------------------------------")
+	log.Info("------------------------------------")
+	log.Info("-      Exporter configuration      -")
+	log.Info("------------------------------------")
 	log.Info("Go version: ", runtime.Version())
 	for i := 0; i < val.NumField(); i++ {
 		valueField := val.Field(i)
 		typeField := val.Type().Field(i)
 		log.Info(fmt.Sprintf("%s : %v", typeField.Name, valueField.Interface()))
 	}
-	log.Info("-----------------------------------")
+	log.Info("------------------------------------")
 }
