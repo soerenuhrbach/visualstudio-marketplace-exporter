@@ -29,7 +29,7 @@ You can download the latest version of the binary built for your architecture he
 You can run it using the following example:
 
 ```bash
-./visualstudio_marketplace_exporter -Extensions "soerenuhrbach.vscode"
+./visualstudio_marketplace_exporter -extensions "soerenuhrbach.vscode"
 ```
 
 ### Docker 
@@ -59,21 +59,21 @@ scrape_configs:
 
 ## Available configurations
 
-|Configuration|Environment variable|Description|Required|Default|
-|---|---|---|---|---|
-|Extensions|EXTENSIONS|Comma-separated list of extensions that should be scraped|Required|-|
-|Metric path|METRICSPATH|Port to be used for the exporter|false|/metrics|
-|Port|PORT|Port to be used for the exporter|false|9719|
-|Binding Address|BINDADDRESS|Address to be used for the exporter|false|0.0.0.0|
+|Configuration name|Description|Required|Argument|Environment variable|Default|
+|---|---|---|---|---|---|
+|Extensions|Comma-separated list of extensions that should be scraped|Required|extensions|EXTENSIONS|-|
+|Metric path|Port to be used for the exporter|false|metricsPath|METRICSPATH|/metrics|
+|Port|Port to be used for the exporter|false|port|PORT|9719|
+|Binding Address|Address to be used for the exporter|false|bindAddress|BINDADDRESS|0.0.0.0|
 
 Examples with all possible configurations:
 
 ```bash
 ./visualstudio_marketplace_exporter \
-  -Extensions "soerenuhrbach.vscode" \
-  -MetricsPath "/metrics" \
-  -Port 9719 \
-  -BINDADDRESS 0.0.0.0
+  -extensions "soerenuhrbach.vscode" \
+  -metricsPath "/metrics" \
+  -port 9719 \
+  -bindAddress 0.0.0.0
 ```
 or using docker:
 
