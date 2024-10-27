@@ -14,19 +14,20 @@ env:
 
 jobs:
   build:
-    name: Publish docker images
+    name: Build docker images
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/386
+          - linux/amd64
+          - linux/arm/v6
+          - linux/arm/v7
+          - linux/arm64
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ github.sha }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -38,8 +39,5 @@ jobs:
         uses: docker/build-push-action@v5
         id: build
         with:
-          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
-          pull: true
+          platforms: ${{ matrix.platform }}
           push: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
