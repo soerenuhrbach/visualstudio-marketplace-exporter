@@ -100,3 +100,11 @@ docker run \
 |visualstudio_marketplace_trending_weekly|Weekly trending score of the extension|
 |visualstudio_marketplace_trending_monthly|Monthly trending score of the extension|
 |visualstudio_marketplace_downloads|Number of manual extension downloads via web interface|
+
+## Release Notes
+
+### 1.0.0
+
+Initial release
+
+[MIT LICENSE](LICENSE)
