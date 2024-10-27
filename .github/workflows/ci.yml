@@ -1,4 +1,4 @@
-name: Build
+name: CI
 
 on:
   push:
@@ -33,7 +33,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ github.sha }}
 
       - name: Set up QEMU
@@ -48,6 +47,6 @@ jobs:
         with:
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
           pull: true
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
