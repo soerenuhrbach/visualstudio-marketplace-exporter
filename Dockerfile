@@ -2,7 +2,7 @@ ARG IMAGE=scratch
 ARG OS=linux
 ARG ARCH=amd64
 
-FROM golang:1.23.2-alpine AS builder
+FROM golang:1.23.5-alpine AS builder
 
 WORKDIR /go/src/github.com/soerenuhrbach/visualstudio-marketplace-exporter
 COPY . .
